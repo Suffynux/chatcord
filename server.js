@@ -1,15 +1,21 @@
-import express from "express";
-import path from "path";
-// Set Static Folder
-app.use(express.static("public"))
+const express = require("express");
+const path = require("path");
+const http = require("http");
+const socketio = require("socket.io");
+
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
 
-const port = 300 || process.env.PORT    
+// Set Static Folder
+app.use(express.static(path.join(__dirname, 'public')));
+const port = process.env.PORT || 3000;
 
-app.listen(port , () =>{
+// Run when client connects
+io.on("connection", socket => {
+    socket.emit("message" , "Welcome to the ChatCord App");
+});
+
+server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-})
-
-app.get("/" , (req , res) => {
-    res.send("Hello World")
-})
+});
