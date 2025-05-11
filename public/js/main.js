@@ -1,7 +1,11 @@
+
+
 const leaveBtn = document.getElementById("leave-btn");
 const chatForm = document.getElementById("chat-form");
 const messgae = document.getElementById("msg");
 const sendBtn = document.getElementsByClassName("btn");
+const chatMessages = document.querySelector(".chat-messages");
+
 const socket = io();
 
 function outputMessage(message) {
@@ -19,18 +23,31 @@ function outputMessage(message) {
     });
   
     div.innerHTML = `
-      <p class="meta">Brad <span>${pakTime}</span></p>
+      <p class="meta">${message.username} <span>${pakTime}</span></p>
       <p class="text">
-        ${message}
+        ${message.text}
       </p>
     `;
   
     document.querySelector(".chat-messages").appendChild(div);
   }
+
+  // Get username and roomname from the Url
+  const {username , room} = Qs.parse(location.search , {
+      ignoreQueryPrefix: true
+  })
+  
+  socket.on("message", (message) => {
+    outputMessage(message);
+    console.log(message);
+    console.log("fdfd",username , room);
   
 
-socket.on("message", (message) => {
-  outputMessage(message);
+  // Scroll down
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  // clear input
+  messgae.value = "";
+
 });
 
 // Message submit

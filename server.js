@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const http = require("http");
 const socketio = require("socket.io");
-
+const formatMessgae = require("./utils/message.js")
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
@@ -15,18 +15,17 @@ const port = process.env.PORT || 3000;
 io.on("connection", socket => {
 
     // Welcome current user
-    socket.emit("message" , "Welcome to the ChatCord App");
+    socket.emit("message" , formatMessgae("Chat Cord Bot" , "Welcome to the ChatCord App"));
     // Broadcast when user connects
-    socket.broadcast.emit("message" , "A user has joined the chat");
     // Listen for chatMessage 
 // Listen for chatMessage 
 socket.on("chatMessage", msg => {
-    io.emit("message", msg); // ✅ Now it matches client-side listener
+    io.emit("message", formatMessgae("Sufiyan",msg)); // ✅ Now it matches client-side listener
 });
 
     // message for all when user disconnect
     socket.on("disconnect" , ()=>{
-        io.emit("message" ,"A user has left the chat")
+        io.emit("message" , formatMessgae("Chat Cord Bot" , "A user has left the chat" ))
     })
 });
 
